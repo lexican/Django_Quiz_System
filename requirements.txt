@@ -1,0 +1,7 @@
+pip install Django==2.2.4
+
+	how to run the app.
+step 1. open this project in a window
+step 2. run the app using the following commands
+	-cd QuizApp 
+	-python manage.py runserver # by default this will be launched on  http://127.0.0.1:8000/

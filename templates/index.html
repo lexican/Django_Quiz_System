@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block content%}
+
+<div class="container pt-4">
+    <div class="row mt-4">
+        <div class=" col-10 d-flex justify-content-center" >
+            {% for quiz in quiz %}
+            <div class="card" style="width: 1000px; ">
+                <p class="card-header" style=" font-size: 19px;">
+                    {{ quiz.question }}
+                </p>
+                <div class="card-body">
+                    <form class="form-group" action="" method="post" id="submit">
+                        {% csrf_token %}
+                        <input type="radio" name="choice" class="mb-3" id="choice_one" value="{{ quiz.choice_one }}"><span class="pl-4">{{ quiz.choice_one }}</span><br/>
+                        <input type="radio" name="choice" class="mb-3" id="choice_two" value="{{ quiz.choice_two }}"><span class="pl-4">{{ quiz.choice_two }}</span><br>
+                        <input type="radio" name="choice" class="mb-3" id="choice_three" value="{{ quiz.choice_three }}"><span class="pl-4">{{ quiz.choice_three }}</span><br>
+                        <input type="radio" name="choice" class="mb-3" id="choice_four" value="{{ quiz.choice_four }}"><span class="pl-4">{{ quiz.choice_four }}</span><br>
+                        <input type="hidden" name="quiz_id" value="{{ quiz.id}}" id="quiz_id">
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        <div class="col-2">
+            <div class="img" style="width: 2px;">
+                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" style="Width: 100px; height: 100;">
+            </div>
+            <p><a href="{% url 'profile' %}" class="">{{user.username}}</a></p>
+            <a href="{% url 'logout' %}" class="btn btn-primary">Submit</a>
+        </div>
+    </div>
+    <div class="row my-4 mr-2">
+        <div class=" col-10" >
+             <nav>
+                <ul class="pagination justify-content-between">
+                    {% if quiz.has_previous %}
+                    <li class="page-item"><a href="?page={{ quiz.previous_page_number }}" class="btn btn-outline-info mx-4">previous</a></li>
+                    {% endif %}
+                    {% if quiz.has_next %}
+                    <li class="page-item"><a href="?page={{ quiz.next_page_number }}" class="btn btn-outline-info mx-1">next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+</div>
+
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/js/bootstrap.min.js' %} "></script>
+
+
+    <script>
+      $(document).ready( () => {
+        $('input').click((e) => {
+          $.ajax({
+            type: 'POST',
+            url: '{% url 'index' %}',
+            data: $('#submit').serialize(),
+            success: (data) => {
+                console.log(data);
+                var message = data[0].message;
+                console.log(message);
+                console.log(data[0].ans);
+            }
+          });
+        });
+      });
+
+    </script>
+{%endblock%}
